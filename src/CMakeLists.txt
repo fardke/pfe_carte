@@ -1,0 +1,8 @@
+file(GLOB SRC "*.c")
+include_directories(../include)
+SET(LIBRARY_OUTPUT_PATH ${BLUETOOTH_BINARY_DIR}/main)
+add_library(bt_op SHARED ${SRC})
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
+		set(CMAKE_C_FLAGS "-fPIC")
+		target_link_libraries(bt_op dl bluetooth)
+endif()

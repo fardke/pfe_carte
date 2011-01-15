@@ -1,0 +1,3 @@
+INCLUDE_DIRECTORIES(${BLUETOOTH_SOURCE_DIR}/include)
+ADD_EXECUTABLE(client main_client.c)
+TARGET_LINK_LIBRARIES(client bt_op)
