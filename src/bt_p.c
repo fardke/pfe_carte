@@ -26,7 +26,7 @@ int scanBt(){
 
 int sendMsg(){
 	struct sockaddr_l2 addrDest = {0};
-	char* buff = "Salut";
+	char buff[6] = "Salut";
 	int sock;
 	readAddr(&addrDest);
 	if ((sock = socket(AF_BLUETOOTH, SOCK_SEQPACKET, BTPROTO_L2CAP)) < 0) {
@@ -138,17 +138,21 @@ int readAddr(struct sockaddr_l2* addr){
 	char buff[256];
 	char c;
 	int i=0;
-	if((flux =fopen(CONFIG_FILE,"a"))== NULL){
+	if((flux =fopen(CONFIG_FILE,"r"))== NULL){
 		perror("Config file don't exists");
 		return;
 	}
 	while((c=fgetc(flux))!=EOF){
-		buff[i]=c;
-		i++;
+		if(c!=EOF){
+			buff[i]=c;
+			i++;
+		}
 	}
+	buff[i]='\0';
+	printf("Adresse serveur : %s\n",buff);
 	fclose(flux);
 
-	baswap(&(addr->l2_bdaddr),strtoba(buff));
+	bacpy(&(addr->l2_bdaddr),strtoba(buff));
 	addr->l2_family = AF_BLUETOOTH;
 	addr->l2_psm = htobs(PORT);
 	fclose(flux);
